@@ -33,11 +33,12 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
 
     useEffect(() => {
         if (!isAdmin || !supabase) return;
+        const client = supabase;
         fetch('/api/admin-login', { method: 'POST' })
             .then(r => r.ok ? r.json() : null)
             .then(data => {
                 if (data?.access_token) {
-                    supabase.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token });
+                    client.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token });
                 }
             })
             .catch(e => console.error('Admin auth failed:', e));
