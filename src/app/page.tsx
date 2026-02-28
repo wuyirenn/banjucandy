@@ -62,7 +62,7 @@ function HomeContent() {
   ), [handleOver, handleLeave, navFilter, handleFilterChange, searchQuery, isAdmin]);
 
   const mainContent = useMemo(() => (
-    <div className="absolute top-0 left-0 right-0 w-full min-h-[100vh] select-none overflow-y-auto opacity-0 animate-fadeIn">
+    <div className="absolute top-0 left-0 right-0 w-full min-h-[100vh] bg-amber-50 select-none overflow-y-auto opacity-0 animate-fadeIn">
       {navbar}
       <Whiteboard
         activeTool={activeTool}

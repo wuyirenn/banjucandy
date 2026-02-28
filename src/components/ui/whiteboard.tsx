@@ -68,7 +68,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ activeTool, strokeWidth, stroke
             {showModal && createPortal(
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-md backdrop-brightness-90">
                     <div
-                        className="bg-white rounded-lg shadow-lg p-6 flex flex-col gap-4 min-w-[280px]"
+                        className="bg-amber-50 rounded-lg shadow-lg p-6 flex flex-col gap-4 min-w-[280px]"
                         onClick={e => e.stopPropagation()}
                     >
                         <div className="flex flex-col gap-1">
@@ -77,7 +77,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ activeTool, strokeWidth, stroke
                                 value={desc}
                                 onChange={e => setDesc(e.target.value)}
                                 onKeyDown={e => e.key === 'Enter' && handleModalConfirm()}
-                                className="text-stone-600 font-nunitosans font-semibold text-sm border-b border-stone-200 outline-none pb-1"
+                                className="text-stone-600 font-nunitosans font-semibold text-sm border-b border-stone-300 bg-amber-50 outline-none pb-1"
                                 placeholder="..."
                                 autoFocus
                             />
@@ -88,7 +88,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ activeTool, strokeWidth, stroke
                                 value={artist}
                                 onChange={e => setArtist(e.target.value)}
                                 onKeyDown={e => e.key === 'Enter' && handleModalConfirm()}
-                                className="text-stone-600 font-nunitosans font-semibold text-sm border-b border-stone-200 outline-none pb-1"
+                                className="text-stone-600 font-nunitosans font-semibold text-sm border-b border-stone-300 bg-amber-50 outline-none pb-1"
                                 placeholder="..."
                             />
                         </div>
@@ -166,7 +166,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ activeTool, strokeWidth, stroke
                 }}
                 initialData={{
                     appState: {
-                        viewBackgroundColor: '#ffffff',
+                        viewBackgroundColor: '#fcfaed',
                         currentItemStrokeColor: strokeColor,
                         currentItemStrokeWidth: strokeWidth,
                         currentItemRoughness: 0,

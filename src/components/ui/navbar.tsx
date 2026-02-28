@@ -184,7 +184,7 @@ const Navbar: React.FC<NavbarProps> = ({ onFilterChange, activeTool, onToolChang
                             className={`opacity-0 animate-fadeIn duration-700 delay-600 ${itemClass} cursor-pointer`}
                             onClick={() => handleFilterChange(null)}
                         >
-                            DAILY SKETCHES
+                            SKETCHES
                         </div>
                         {openDropdown === 'sketches' && (
                             <div className="opacity-0 animate-fadeIn duration-300">
@@ -241,7 +241,7 @@ const Navbar: React.FC<NavbarProps> = ({ onFilterChange, activeTool, onToolChang
                         className={`opacity-0 animate-fadeIn duration-700 delay-800 ${itemClass} cursor-pointer`}
                         onClick={() => handleFilterChange({ type: 'fan_art' })}
                     >
-                        GALLERY
+                        COMMUNITY
                     </div>
                     <NavItem to="about" delay="delay-900" pathname={pathname}>ABOUT</NavItem>
                 </ul>

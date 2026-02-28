@@ -74,7 +74,7 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                     .select('id, date, description, url, color')
                     .gte('date', start)
                     .lt('date', end)
-                    .order('date', { ascending: false });
+                    .order('id', { ascending: false });
             } else if (filter?.type === 'fan_art') {
                 let q = supabase
                     .from('fan_art')
@@ -86,7 +86,7 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                 query = supabase
                     .from('sketches')
                     .select('id, date, description, url, color')
-                    .order('date', { ascending: false });
+                    .order('id', { ascending: false });
             }
 
             const { data, error } = await query;
@@ -113,22 +113,17 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
         return () => { cancelled = true; };
     }, [filter]);
 
+
     useEffect(() => {
         if (images.length === 0) return;
-        const imageLoaders: HTMLImageElement[] = [];
-        images.forEach((image, index) => {
+        const loaders: HTMLImageElement[] = [];
+        images.forEach(image => {
             const img = new Image();
             img.src = image.src;
-            img.onload = () => {
-                setTimeout(() => {
-                    setLoadedImages(prev => ({ ...prev, [image.id]: true }));
-                }, index * 50);
-            };
-            imageLoaders.push(img);
+            img.onload = () => setLoadedImages(prev => ({ ...prev, [image.id]: true }));
+            loaders.push(img);
         });
-        return () => {
-            imageLoaders.forEach(img => { img.onload = null; });
-        };
+        return () => { loaders.forEach(img => { img.onload = null; }); };
     }, [images]);
 
     const openLightbox = React.useCallback((image: ImageData) => setSelectedImage(image), []);
@@ -156,6 +151,16 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
     return (
         <main className="">
             <div className="font-avantgarde drop-shadow-md">
+                {!filter && (
+                    <div className="flex flex-col mt-10 sm:mt-14 md:mt-20 text-left">
+                        <span className="text-stone-500/70 font-nunitosans font-medium text-sm">
+                            drawing with friends on <span className="text-stone-600">sundays @ noon!</span> 
+                        </span>
+                        <span className="font-nunitosans font-medium text-sm text-stone-600">
+                            2/28: third wheel coffee, SF
+                        </span>
+                    </div>
+                )}
                 <div className="columns-1 gap-4 mt-10 sm:mt-14 md:mt-20">
                     {visibleImages.map((image) => (
                         <div
@@ -170,16 +175,16 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                                         alt={image.description}
                                         className="w-full h-auto object-cover rounded-lg shadow-md"
                                         onClick={() => openLightbox(image)}
+                                        onLoad={() => setLoadedImages(prev => ({ ...prev, [image.id]: true }))}
                                         onMouseOver={() => handleOver(46)}
                                         onMouseLeave={() => handleLeave(22)}
-                                        loading="lazy"
                                         width="100%"
                                         height="auto"
                                     />
                                     {isAdmin && filter?.type === 'fan_art' && (
                                         <button
                                             onClick={e => { e.stopPropagation(); handleDelete(image); }}
-                                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100 bg-white/80 rounded p-1.5 text-stone-400 hover:text-red-500"
+                                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100 bg-white/80 rounded p-1.5 text-stone-400 hover:text-stone-600"
                                         >
                                             <FaTrash size={11} />
                                         </button>
@@ -197,9 +202,19 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                         </div>
                     ))}
                 </div>
+                {!filter && (
+                    <div className="mt-4 mb-8 text-left text-stone-500/70 font-nunitosans font-medium text-sm">
+                        tune in later for more sketches!
+                    </div>
+                )}
+                {filter?.type === 'sketches' && (
+                    <div className="mt-4 mb-8 text-left text-stone-500/70 font-nunitosans font-medium text-sm">
+                        tune in later for more!
+                    </div>
+                )}
                 {filter?.type === 'fan_art' && (
-                    <div className="mt-4 mb-8 text-left text-stone-500/70 font-nunitosans font-medium text-xs">
-                        nothing more to see! make (and save) some art to add to the gallery!
+                    <div className="mt-4 mb-8 text-left text-stone-500/70 font-nunitosans font-medium text-sm">
+                        nothing more to see! doodle on the page to add to the gallery!
                     </div>
                 )}
             </div>
@@ -208,6 +223,7 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                 onClose={closeLightbox}
                 onCursorOver={handleOver}
                 onCursorLeave={handleLeave}
+                isFanArt={filter?.type === 'fan_art'}
             />}
         </main>
     );

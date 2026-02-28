@@ -18,9 +18,10 @@ interface LightboxModalProps {
     onClose: () => void;
     onCursorOver: (n: number) => void;
     onCursorLeave: (n: number) => void;
+    isFanArt?: boolean;
 }
 
-const LightboxModal: React.FC<LightboxModalProps> = ({ image, onClose, onCursorOver, onCursorLeave }) => {
+const LightboxModal: React.FC<LightboxModalProps> = ({ image, onClose, onCursorOver, onCursorLeave, isFanArt }) => {
     const [isVisible, setIsVisible] = useState(false)
     const isIndigo = image.color !== 'yamaguri';
     const descClass  = isIndigo ? 'text-indigo-600'    : 'text-stone-600';
@@ -54,7 +55,7 @@ const LightboxModal: React.FC<LightboxModalProps> = ({ image, onClose, onCursorO
                 <img src={image.src} alt={image.description} className={`max-w-[85vw] max-h-[85vh] m-1 outline object-scale-down ${outlineClass}`}/>
                 <div className="flex bottom-0 justify-between">
                     <div className={`relative bottom-0 left-0 font-semibold ${descClass}`}>
-                        {image.artist ? <>&ldquo;{image.description}&rdquo; by {image.artist}</> : image.description}
+                        {isFanArt ? <>&ldquo;{image.description}&rdquo; by {image.artist}</> : image.description}
                     </div>
                     <div className={`relative bottom-0 right-0 text-right font-medium ${metaClass}`}>
                         {image.location}{image.date ? ` ${image.date.replaceAll('-', '.')}` : ''}
