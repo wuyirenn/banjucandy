@@ -30,6 +30,8 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
     const [radius, setRadius] = useState(20);
     const [loadedImages, setLoadedImages] = useState<{[key: number]: boolean}>({});
     const [imagesVisible, setImagesVisible] = useState(false);
+    const pendingLoads = React.useRef<{[key: number]: boolean}>({});
+    const rafRef = React.useRef<number | null>(null);
 
     useEffect(() => {
         if (!isAdmin || !supabase) return;
@@ -116,14 +118,24 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
 
     useEffect(() => {
         if (images.length === 0) return;
+        pendingLoads.current = {};
         const loaders: HTMLImageElement[] = [];
         images.forEach(image => {
             const img = new Image();
             img.src = image.src;
-            img.onload = () => setLoadedImages(prev => ({ ...prev, [image.id]: true }));
+            img.onload = () => {
+                pendingLoads.current[image.id] = true;
+                if (rafRef.current) cancelAnimationFrame(rafRef.current);
+                rafRef.current = requestAnimationFrame(() => {
+                    setLoadedImages(prev => ({ ...prev, ...pendingLoads.current }));
+                });
+            };
             loaders.push(img);
         });
-        return () => { loaders.forEach(img => { img.onload = null; }); };
+        return () => {
+            loaders.forEach(img => { img.onload = null; });
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        };
     }, [images]);
 
     const openLightbox = React.useCallback((image: ImageData) => setSelectedImage(image), []);
@@ -166,7 +178,7 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                         <div
                             key={image.id}
                             className="mb-4 break-inside-avoid w-full"
-                            style={{ display: 'inline-block', width: '100%' }}
+                            style={{ display: 'inline-block', width: '100%', contentVisibility: 'auto' }}
                         >
                             <div className={`transition-opacity duration-1000 ease-in-out ${loadedImages[image.id] && imagesVisible ? 'opacity-100' : 'opacity-0'}`}>
                                 <div className="relative group">
@@ -175,7 +187,6 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                                         alt={image.description}
                                         className="w-full h-auto object-cover rounded-lg shadow-md"
                                         onClick={() => openLightbox(image)}
-                                        onLoad={() => setLoadedImages(prev => ({ ...prev, [image.id]: true }))}
                                         onMouseOver={() => handleOver(46)}
                                         onMouseLeave={() => handleLeave(22)}
                                         width="100%"
