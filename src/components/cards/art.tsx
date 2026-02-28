@@ -101,7 +101,7 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                 location: '',
                 date: row.date ?? '',
                 color: row.color ?? 'yamaguri',
-                artist: row.artist ?? 'anonymous',
+                artist: ('artist' in row ? row.artist : null) ?? 'anonymous',
             }));
 
             setImages(mapped);
