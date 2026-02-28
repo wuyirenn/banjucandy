@@ -225,7 +225,7 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                 )}
                 {filter?.type === 'fan_art' && (
                     <div className="mt-4 mb-8 text-left text-stone-500/70 font-nunitosans font-medium text-sm">
-                        nothing more to see! doodle on the page to add to the gallery!
+                        nothing more to see! doodle on the page (and click save) to add to the gallery!
                     </div>
                 )}
             </div>
