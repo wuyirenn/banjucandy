@@ -198,7 +198,7 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                     ))}
                 </div>
                 {filter?.type === 'fan_art' && (
-                    <div className="mt-4 mb-8 text-center text-stone-500/70 font-nunitosans font-medium text-xs">
+                    <div className="mt-4 mb-8 text-left text-stone-500/70 font-nunitosans font-medium text-xs">
                         nothing more to see! make (and save) some art to add to the gallery!
                     </div>
                 )}
