@@ -5,8 +5,8 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
-  title: "Dreamland",
-  description: "Personal website of Christian Yi-Renn Wu",
+  title: "Sketches by Wu Yi-Renn",
+  description: "Art website of Christian Yi-Renn Wu",
 };
 
 export default function RootLayout({
