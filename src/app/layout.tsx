@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { NunitoSans, AvantGarde } from "@/utils/customFonts";
 import { cn } from "@/lib/utils";
 import "./globals.css";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "Dreamland",
@@ -24,6 +25,7 @@ export default function RootLayout({
         <main className="relative flex min-h-screen cursor-crosshair">
           <div className="flex-grow flex-1">
             {children}
+            <SpeedInsights />
           </div>
         </main>
       </body>
