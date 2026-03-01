@@ -195,7 +195,7 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                                     {isAdmin && filter?.type === 'fan_art' && (
                                         <button
                                             onClick={e => { e.stopPropagation(); handleDelete(image); }}
-                                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100 bg-white/80 rounded p-1.5 text-stone-400 hover:text-stone-600"
+                                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100 bg-none rounded p-1.5 text-stone-400 hover:text-stone-600"
                                         >
                                             <FaTrash size={11} />
                                         </button>
