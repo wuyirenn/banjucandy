@@ -126,13 +126,15 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ activeTool, strokeWidth, stroke
                             });
                             const blob = new Blob([svg.outerHTML], { type: 'image/svg+xml' });
 
-                            // download locally
-                            const localUrl = URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = localUrl;
-                            a.download = 'whiteboard.svg';
-                            a.click();
-                            URL.revokeObjectURL(localUrl);
+                            // download locally (best-effort, not supported on all mobile browsers)
+                            try {
+                                const localUrl = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = localUrl;
+                                a.download = 'whiteboard.svg';
+                                a.click();
+                                URL.revokeObjectURL(localUrl);
+                            } catch { /* silently skip on unsupported devices */ }
 
                             // upload to Supabase
                             if (supabase) {
