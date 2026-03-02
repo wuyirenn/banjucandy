@@ -129,9 +129,9 @@ const Navbar: React.FC<NavbarProps> = ({ onFilterChange, activeTool, onToolChang
             if (sketchData) {
                 const monthsByYear: Record<number, number[]> = {};
                 sketchData.forEach(({ date }) => {
-                    const d = new Date(date);
-                    const year = d.getFullYear();
-                    const month = d.getMonth() + 1;
+                    const [yearStr, monthStr] = date.split('-');
+                    const year = parseInt(yearStr, 10);
+                    const month = parseInt(monthStr, 10);
                     if (!monthsByYear[year]) monthsByYear[year] = [];
                     if (!monthsByYear[year].includes(month)) monthsByYear[year].push(month);
                 });

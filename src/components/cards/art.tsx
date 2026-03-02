@@ -173,6 +173,11 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                         </span>
                     </div>
                 )}
+                {filter?.type === 'fan_art' && (
+                    <div className="mt-10 sm:mt-14 md:mt-20 mb-8 text-left text-stone-500/70 font-nunitosans font-medium text-sm">
+                        doodle on the page (and click save) to add to the gallery!
+                    </div>
+                )}
                 <div className="columns-1 gap-4 mt-10 sm:mt-14 md:mt-20">
                     {visibleImages.map((image) => (
                         <div
@@ -213,19 +218,14 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                         </div>
                     ))}
                 </div>
-                {!filter && (
+                {(!filter || filter?.type === 'sketches') && (
                     <div className="mt-4 mb-8 text-left text-stone-500/70 font-nunitosans font-medium text-sm">
-                        tune in later for more sketches!
-                    </div>
-                )}
-                {filter?.type === 'sketches' && (
-                    <div className="mt-4 mb-8 text-left text-stone-500/70 font-nunitosans font-medium text-sm">
-                        tune in later for more!
+                        tune in tomorrow for more!
                     </div>
                 )}
                 {filter?.type === 'fan_art' && (
                     <div className="mt-4 mb-8 text-left text-stone-500/70 font-nunitosans font-medium text-sm">
-                        nothing more to see! doodle on the page (and click save) to add to the gallery!
+                        nothing more to see!
                     </div>
                 )}
             </div>

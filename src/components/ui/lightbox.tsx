@@ -50,7 +50,7 @@ const LightboxModal: React.FC<LightboxModalProps> = ({ image, onClose, onCursorO
                     onClick={handleClose} 
                     className="absolute top-2 left-2 font-bold py-2 px-2 rounded" 
                 >
-                    <AiOutlineClose size={24} className="hover:size-7 duration-100 ease-out text-stone-500"/>
+                    <AiOutlineClose size={24} className={`hover:size-7 duration-100 ease-out ${metaClass}`}/>
                 </button>
                 <img src={image.src} alt={image.description} className={`max-w-[85vw] max-h-[85vh] m-1 outline object-scale-down ${outlineClass}`}/>
                 <div className="flex bottom-0 justify-between">
