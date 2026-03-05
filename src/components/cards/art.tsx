@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { FaTrash } from 'react-icons/fa6';
 import LightboxModal from '../ui/lightbox';
 import { supabase } from '@/lib/supabase';
@@ -30,6 +31,7 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
     const [radius, setRadius] = useState(20);
     const [loadedImages, setLoadedImages] = useState<{[key: number]: boolean}>({});
     const [imagesVisible, setImagesVisible] = useState(false);
+    const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
     const pendingLoads = React.useRef<{[key: number]: boolean}>({});
     const rafRef = React.useRef<number | null>(null);
 
@@ -143,14 +145,6 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
     const handleOver = React.useCallback((n: number) => { setIsActive(true); setRadius(n); }, []);
     const handleLeave = React.useCallback((n: number) => { setIsActive(false); setRadius(n); }, []);
 
-    const handleDelete = async (image: ImageData) => {
-        if (!supabase) return;
-        const filename = image.src.split('/').pop()!;
-        await supabase.storage.from('fan_art').remove([filename]);
-        await supabase.from('fan_art').delete().eq('url', image.src);
-        setImages(prev => prev.filter(img => img.id !== image.id));
-    };
-
     const q = searchQuery?.trim().toLowerCase() ?? '';
     const visibleImages = q
         ? images.filter(img => {
@@ -169,7 +163,7 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                             drawing with friends on <span className="text-stone-600">sundays @ noon!</span> 
                         </span>
                         <span className="font-nunitosans font-medium text-sm text-stone-600">
-                            2/28: third wheel coffee, SF
+                            3/8: beanery, SF
                         </span>
                     </div>
                 )}
@@ -198,12 +192,46 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                                         height="auto"
                                     />
                                     {isAdmin && filter?.type === 'fan_art' && (
-                                        <button
-                                            onClick={e => { e.stopPropagation(); handleDelete(image); }}
-                                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100 bg-none rounded p-1.5 text-stone-400 hover:text-stone-600"
-                                        >
-                                            <FaTrash size={11} />
-                                        </button>
+                                        <>
+                                            <button
+                                                onClick={e => { e.stopPropagation(); setConfirmDeleteId(image.id); }}
+                                                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100 bg-none rounded p-1.5 text-stone-400 hover:text-stone-600"
+                                            >
+                                                <FaTrash size={11} />
+                                            </button>
+                                            {confirmDeleteId === image.id && createPortal(
+                                                <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-md backdrop-brightness-90" onClick={() => setConfirmDeleteId(null)}>
+                                                    <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col gap-4 min-w-[280px]" onClick={e => e.stopPropagation()}>
+                                                        <div className="flex flex-col gap-1">
+                                                            <span className="text-stone-600 font-nunitosans font-semibold text-sm">are you sure?</span>
+                                                            <span className="text-stone-500/70 font-nunitosans font-medium text-xs">confirm deletion of &ldquo;{image.description}&rdquo; by {image.artist}</span>
+                                                        </div>
+                                                        <div className="flex justify-end gap-4 mt-2">
+                                                            <button
+                                                                onClick={() => setConfirmDeleteId(null)}
+                                                                className="text-stone-400 font-nunitosans font-medium text-xs hover:text-stone-600 duration-100"
+                                                            >
+                                                                cancel
+                                                            </button>
+                                                            <button
+                                                                onClick={async () => {
+                                                                    if (!supabase) return;
+                                                                    setConfirmDeleteId(null);
+                                                                    const filename = image.src.split('/').pop()!;
+                                                                    await supabase.storage.from('fan_art').remove([filename]);
+                                                                    await supabase.from('fan_art').delete().eq('url', image.src);
+                                                                    setImages(prev => prev.filter(img => img.id !== image.id));
+                                                                }}
+                                                                className="text-stone-600 font-nunitosans font-semibold text-xs hover:text-stone-800 duration-100"
+                                                            >
+                                                                delete
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>,
+                                                document.body
+                                            )}
+                                        </>
                                     )}
                                 </div>
                                 <div className="flex justify-between mt-1">

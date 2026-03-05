@@ -30,6 +30,7 @@ function HomeContent() {
   const handleSearch = useCallback((q: string) => setSearchQuery(q), []);
   const handleRegisterSave = useCallback((fn: () => void) => { saveFnRef.current = fn; }, []);
   const handleSave = useCallback(() => saveFnRef.current?.(), []);
+  const handleSaved = useCallback(() => { setNavFilter({ type: 'fan_art' }); setSearchQuery(''); }, []);
 
   const cursorElement = useMemo(() =>
     <Cursor isActive={isActive} radius={radius} />,
@@ -69,11 +70,12 @@ function HomeContent() {
         strokeWidth={strokeWidth}
         strokeColor={strokeColor}
         onRegisterSave={handleRegisterSave}
+        onSaved={handleSaved}
       />
       {contentSections}
       
     </div>
-  ), [navbar, contentSections, activeTool, strokeWidth, strokeColor, handleRegisterSave]);
+  ), [navbar, contentSections, activeTool, strokeWidth, strokeColor, handleRegisterSave, handleSaved]);
 
   return (
     <main>

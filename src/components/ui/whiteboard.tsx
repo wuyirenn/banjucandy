@@ -22,9 +22,10 @@ interface WhiteboardProps {
     strokeWidth: number;
     strokeColor: string;
     onRegisterSave: (fn: () => void) => void;
+    onSaved?: () => void;
 }
 
-const Whiteboard: React.FC<WhiteboardProps> = ({ activeTool, strokeWidth, strokeColor, onRegisterSave }) => {
+const Whiteboard: React.FC<WhiteboardProps> = ({ activeTool, strokeWidth, strokeColor, onRegisterSave, onSaved }) => {
     const apiRef = useRef<ExcalidrawAPI>(null);
     const pendingSaveRef = useRef<((artist: string, desc: string) => Promise<void>) | null>(null);
 
@@ -161,6 +162,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ activeTool, strokeWidth, stroke
                                     date,
                                 });
                                 if (insertError) console.error('Insert failed:', insertError);
+                                else onSaved?.();
                             }
                         };
                         setShowModal(true);
