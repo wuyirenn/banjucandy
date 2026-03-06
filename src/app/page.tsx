@@ -23,6 +23,7 @@ function HomeContent() {
   const [strokeColor, setStrokeColor] = useState('#6366f1'); // indigo-500
 
   const saveFnRef = useRef<(() => void) | null>(null);
+  const setToolFnRef = useRef<((tool: WhiteboardTool) => void) | null>(null);
 
   const handleOver = useCallback((n: number) => { setIsActive(true); setRadius(n); }, []);
   const handleLeave = useCallback((n: number) => { setIsActive(false); setRadius(n); }, []);
@@ -31,6 +32,8 @@ function HomeContent() {
   const handleRegisterSave = useCallback((fn: () => void) => { saveFnRef.current = fn; }, []);
   const handleSave = useCallback(() => saveFnRef.current?.(), []);
   const handleSaved = useCallback(() => { setNavFilter({ type: 'fan_art' }); setSearchQuery(''); }, []);
+  const handleRegisterSetTool = useCallback((fn: (tool: WhiteboardTool) => void) => { setToolFnRef.current = fn; }, []);
+  const handleSetTool = useCallback((tool: WhiteboardTool) => { setToolFnRef.current?.(tool); setActiveTool(tool); }, []);
 
   const cursorElement = useMemo(() =>
     <Cursor isActive={isActive} radius={radius} />,
@@ -42,7 +45,7 @@ function HomeContent() {
       <Navbar
         onFilterChange={handleFilterChange}
         activeTool={activeTool}
-        onToolChange={setActiveTool}
+        onToolChange={handleSetTool}
         strokeWidth={strokeWidth}
         onStrokeWidthChange={setStrokeWidth}
         strokeColor={strokeColor}
@@ -71,11 +74,12 @@ function HomeContent() {
         strokeColor={strokeColor}
         onRegisterSave={handleRegisterSave}
         onSaved={handleSaved}
+        onRegisterSetTool={handleRegisterSetTool}
       />
       {contentSections}
       
     </div>
-  ), [navbar, contentSections, activeTool, strokeWidth, strokeColor, handleRegisterSave, handleSaved]);
+  ), [navbar, contentSections, activeTool, strokeWidth, strokeColor, handleRegisterSave, handleSaved, handleRegisterSetTool]);
 
   return (
     <main>

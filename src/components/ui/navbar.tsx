@@ -14,6 +14,13 @@ import type { WhiteboardTool } from "./whiteboard";
 
 const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
+const HOTKEYS = {
+    save:      's',
+    freedraw:  'd',
+    eraser:    'e',
+    selection: 'v',
+} as const;
+
 // primary: stone-600 bold — section labels, main nav actions
 const itemClass = "text-right text-stone-600 font-nunitosans font-bold tracking-wide text-xs md:text-sm hover:text-base py-[0.25rem] pointer-events-auto transition-transform duration-300 ease-in-out";
 // secondary: stone-500 semibold — years, category sub-headings
@@ -115,6 +122,21 @@ const Navbar: React.FC<NavbarProps> = ({ onFilterChange, activeTool, onToolChang
     const handleWidthChange = (w: number) => { setLocalWidth(w); onStrokeWidthChange?.(w); };
     const handleColorChange = (c: string) => { setLocalColor(c); onStrokeColorChange?.(c); };
     const handleFilterChange = (filter: NavFilter) => { setSearchQuery(''); onSearch?.(''); onFilterChange?.(filter); };
+
+    useEffect(() => {
+        const onKeyDown = (e: KeyboardEvent) => {
+            const tag = (e.target as HTMLElement).tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+            // Block every key from reaching Excalidraw's bubble-phase handler.
+            e.stopPropagation();
+            if (e.key === HOTKEYS.save) { e.preventDefault(); onSave?.(); }
+            else if (e.key === HOTKEYS.freedraw) { setLocalTool('freedraw'); onToolChange?.('freedraw'); }
+            else if (e.key === HOTKEYS.eraser) { setLocalTool('eraser'); onToolChange?.('eraser'); }
+            else if (e.key === HOTKEYS.selection) { setLocalTool('selection'); onToolChange?.('selection'); }
+        };
+        window.addEventListener('keydown', onKeyDown, true);
+        return () => window.removeEventListener('keydown', onKeyDown, true);
+    }, [onSave, onToolChange]);
 
     // Fetch sketch years/months and distinct project IDs on mount
     useEffect(() => {
@@ -250,10 +272,11 @@ const Navbar: React.FC<NavbarProps> = ({ onFilterChange, activeTool, onToolChang
             <div className="fixed bottom-0 right-0 m-nav drop-shadow-md">
                 {/* Save */}
                 <div className="flex justify-end opacity-0 animate-fadeIn duration-700 delay-1400">
-                    <button onClick={() => onSave?.()} className="text-stone-500/70 hover:text-stone-600 duration-100 ease-out">
-                    <IconContext.Provider value={{ className: "hover:size-7 duration-100 ease-out" }}>
-                        <FaFloppyDisk size={22}/>
-                    </IconContext.Provider>
+                    <button onClick={() => onSave?.()} className="flex items-end gap-1 text-stone-500/70 hover:text-stone-600 duration-100 ease-out">
+                        <IconContext.Provider value={{ className: "hover:size-7 duration-100 ease-out" }}>
+                            <FaFloppyDisk size={22}/>
+                        </IconContext.Provider>
+                        <span className="text-[10px] font-nunitosans font-semibold text-stone-600 leading-none">{HOTKEYS.save}</span>
                     </button>
                 </div>
                 <div className="h-6" />
@@ -298,24 +321,27 @@ const Navbar: React.FC<NavbarProps> = ({ onFilterChange, activeTool, onToolChang
                     )}
                     <button
                         onClick={() => handleToolChange('freedraw')}
-                        className={`opacity-0 animate-fadeIn delay-1500 duration-700 ease-out ${localTool === 'freedraw' ? 'text-stone-600' : 'text-stone-400'}`}
+                        className={`flex items-end gap-1 opacity-0 animate-fadeIn delay-1500 duration-700 ease-out ${localTool === 'freedraw' ? 'text-stone-600' : 'text-stone-400'}`}
                     >
                         <IconContext.Provider value={{ className: "hover:size-7 hover:text-stone-600 duration-100 ease-out" }} >
                             <FaPenNib size={22} />
                         </IconContext.Provider>
+                        <span className="text-[10px] font-nunitosans font-semibold text-stone-600 leading-none">{HOTKEYS.freedraw}</span>
                     </button>
                 </div>
                 <div className="h-6" />
-                <button onClick={() => handleToolChange('eraser')} className={`flex justify-end w-full opacity-0 animate-fadeIn delay-1600 hover:scale-110 duration-700 ease-out ${localTool === 'eraser' ? 'text-stone-600' : 'text-stone-400'}`}>
+                <button onClick={() => handleToolChange('eraser')} className={`flex justify-end items-end gap-1 w-full opacity-0 animate-fadeIn delay-1600 hover:scale-110 duration-700 ease-out ${localTool === 'eraser' ? 'text-stone-600' : 'text-stone-400'}`}>
                     <IconContext.Provider value={{ className: "hover:size-7 hover:text-stone-600 duration-100 ease-out" }} >
                         <FaEraser size={22} />
                     </IconContext.Provider>
+                    <span className="text-[10px] font-nunitosans font-semibold text-stone-600 leading-none">{HOTKEYS.eraser}</span>
                 </button>
                 <div className="h-6" />
-                <button onClick={() => handleToolChange('selection')} className={`flex justify-end w-full opacity-0 animate-fadeIn delay-1700 hover:scale-110 duration-700 ease-out ${localTool === 'selection' ? 'text-stone-600' : 'text-stone-400'}`}>
+                <button onClick={() => handleToolChange('selection')} className={`flex justify-end items-end gap-1 w-full opacity-0 animate-fadeIn delay-1700 hover:scale-110 duration-700 ease-out ${localTool === 'selection' ? 'text-stone-600' : 'text-stone-400'}`}>
                     <IconContext.Provider value={{ className: "hover:size-7 hover:text-stone-600 duration-100 ease-out" }} >
                         <BsCursorFill size={22} />
                     </IconContext.Provider>
+                    <span className="text-[10px] font-nunitosans font-semibold text-stone-600 leading-none">{HOTKEYS.selection}</span>
                 </button>
             </div>
 

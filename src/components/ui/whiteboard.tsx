@@ -23,9 +23,10 @@ interface WhiteboardProps {
     strokeColor: string;
     onRegisterSave: (fn: () => void) => void;
     onSaved?: () => void;
+    onRegisterSetTool: (fn: (tool: WhiteboardTool) => void) => void;
 }
 
-const Whiteboard: React.FC<WhiteboardProps> = ({ activeTool, strokeWidth, strokeColor, onRegisterSave, onSaved }) => {
+const Whiteboard: React.FC<WhiteboardProps> = ({ activeTool, strokeWidth, strokeColor, onRegisterSave, onSaved, onRegisterSetTool }) => {
     const apiRef = useRef<ExcalidrawAPI>(null);
     const pendingSaveRef = useRef<((artist: string, desc: string) => Promise<void>) | null>(null);
 
@@ -116,6 +117,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ activeTool, strokeWidth, stroke
                 excalidrawAPI={(api) => {
                     apiRef.current = api;
                     api.setActiveTool({ type: activeTool });
+                    onRegisterSetTool((tool) => api.setActiveTool({ type: tool }));
                     onRegisterSave(() => {
                         pendingSaveRef.current = async (artistName, description) => {
                             const appState = api.getAppState();
