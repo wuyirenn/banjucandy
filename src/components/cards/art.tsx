@@ -163,7 +163,7 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                             drawing with friends on <span className="text-stone-600">sundays @ noon!</span> 
                         </span>
                         <span className="font-nunitosans font-medium text-sm text-stone-600">
-                            3/15: caffe trieste, SF
+                            3/22: mission dolores park, SF
                         </span>
                     </div>
                 )}
