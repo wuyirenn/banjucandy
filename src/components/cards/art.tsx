@@ -235,12 +235,12 @@ const Art: React.FC<ArtProps> = ({ filter, onFilterChange, searchQuery, isAdmin 
                                     )}
                                 </div>
                                 <div className="flex justify-between mt-1">
-                                    <span className={`font-nunitosans font-semibold text-xs ${image.color === 'yamaguri' ? 'text-stone-600' : 'text-indigo-600'}`}>
+                                    <span className={`font-nunitosans font-semibold text-xs ${image.color === 'yamaguri' ? 'text-stone-600' : image.color === 'dategokoro' ? 'text-fuchsia-950' : 'text-indigo-600'}`}>
                                         {filter?.type === 'fan_art'
                                             ? <>&ldquo;{image.description}&rdquo; by <span className="underline cursor-pointer" onClick={e => { e.stopPropagation(); onFilterChange?.({ type: 'fan_art', artist: image.artist }); }}>{image.artist}</span></>
                                             : image.description}
                                     </span>
-                                    <span className={`font-nunitosans font-medium text-xs ${image.color === 'yamaguri' ? 'text-stone-500/70' : 'text-indigo-500/70'}`}>{image.date ? image.date.replaceAll('-', '.') : ''}</span>
+                                    <span className={`font-nunitosans font-medium text-xs ${image.color === 'yamaguri' ? 'text-stone-500/70' : image.color === 'dategokoro' ? 'text-fuchsia-950/70' : 'text-indigo-500/70'}`}>{image.date ? image.date.replaceAll('-', '.') : ''}</span>
                                 </div>
                             </div>
                         </div>

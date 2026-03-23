@@ -96,8 +96,8 @@ interface NavbarProps {
 
 const STROKE_WIDTHS = [1, 2, 4] as const;
 const STROKE_HEIGHTS: Record<number, string> = { 1: '2px', 2: '4px', 4: '7px' };
-const COLORS = ['#78716c', '#6366f1'] as const; // stone-500, indigo-500
-const COLOR_CLASSES: Record<string, string> = { '#78716c': 'bg-stone-500', '#6366f1': 'bg-indigo-500' };
+const COLORS = ['#78716c', '#6366f1', '#4a044e'] as const; // stone-500, indigo-500, fuchsia-950
+const COLOR_CLASSES: Record<string, string> = { '#78716c': 'bg-stone-500', '#6366f1': 'bg-indigo-500', '#4a044e': 'bg-fuchsia-950' };
 
 const Navbar: React.FC<NavbarProps> = ({ onFilterChange, activeTool, onToolChange, strokeWidth, onStrokeWidthChange, strokeColor, onStrokeColorChange, onSave, onSearch }) => {
     const pathname = usePathname();

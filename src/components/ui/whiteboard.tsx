@@ -15,6 +15,7 @@ type ExcalidrawAPI = any;
 const COLOR_NAMES: Record<string, string> = {
     '#78716c': 'yamaguri',
     '#6366f1': 'ajisai',
+    '#4a044e': 'dategokoro',
 };
 
 interface WhiteboardProps {

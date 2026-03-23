@@ -23,10 +23,9 @@ interface LightboxModalProps {
 
 const LightboxModal: React.FC<LightboxModalProps> = ({ image, onClose, onCursorOver, onCursorLeave, isFanArt }) => {
     const [isVisible, setIsVisible] = useState(false)
-    const isIndigo = image.color !== 'yamaguri';
-    const descClass  = isIndigo ? 'text-indigo-600'    : 'text-stone-600';
-    const metaClass  = isIndigo ? 'text-indigo-500/70' : 'text-stone-500/70';
-    const outlineClass = isIndigo ? 'outline-indigo-500' : 'outline-stone-500';
+    const descClass  = image.color === 'yamaguri' ? 'text-stone-600' : image.color === 'dategokoro' ? 'text-fuchsia-950' : 'text-indigo-600';
+    const metaClass  = image.color === 'yamaguri' ? 'text-stone-500/70' : image.color === 'dategokoro' ? 'text-fuchsia-950/70' : 'text-indigo-500/70';
+    const outlineClass = image.color === 'yamaguri' ? 'outline-stone-500' : image.color === 'dategokoro' ? 'outline-fuchsia-950' : 'outline-indigo-500';
 
     useEffect(() => {
         setIsVisible(true);
